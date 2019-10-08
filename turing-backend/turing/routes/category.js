@@ -1,0 +1,49 @@
+module.exports=(category,knex)=>{
+    category.get("/",(req,res)=>{
+        knex()
+        .select("*")
+        .from("category")
+        .then((data)=>{
+            res.send(data)
+        }).catch((err)=>{
+            res.send(err)
+        })
+     })
+
+    category.get("/:id",(req,res)=>{
+        knex()
+        .select("*")
+        .from("category")
+        .where("category_id",req.params.id)
+        .then((data)=>{
+            res.send(data)
+        }).catch((err)=>{
+            res.send(err)
+        })
+    })
+
+    category.get("/inProduct/:product_id",(req,res)=>{
+        knex
+        .select("category.category_id","department_id","name")
+        .from("category")
+        .join("product_category","category.category_id", "=", "product_category.category_id")
+        .where('product_category.product_id',req.params.product_id)
+        .then((data)=>{
+            res.send(data)
+        }).catch((err)=>{
+            res.send(err)
+        })
+    })
+
+    category.get("/inDepartment/:d_id",(req,res)=>{
+        knex
+        .select("*")
+        .from("category")
+        .where("department_id",req.params.d_id)
+        .then((data)=>{
+            res.send(data)
+        }).catch((err)=>{
+            res.send(err)
+        })
+    })
+}

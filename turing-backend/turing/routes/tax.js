@@ -1,0 +1,9 @@
+module.exports=(tax,knew,jwt)=>{
+    tax.get("/",(req,res)=>{
+        knew('tax').select("*").then((data)=>{res.send(data)}).catch((err)=>{res.send(err)})
+    })
+    tax.get("/:id",(req,res)=>{
+        tax_id=req.params.id;
+        knew('tax').select("*").where('tax_id',tax_idcler).then((data)=>{res.send(data)}).catch((err)=>{res.send(err)})
+    })
+}
