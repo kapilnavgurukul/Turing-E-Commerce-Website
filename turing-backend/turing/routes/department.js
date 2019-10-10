@@ -1,4 +1,4 @@
-module.exports=(department,knex)=>{
+module.exports=(department,knex,secret_key)=>{
     department.get("/",(req,res)=>{
         knex()
         .select("*")
