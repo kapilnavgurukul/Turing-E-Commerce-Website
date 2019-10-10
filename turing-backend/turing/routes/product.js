@@ -1,4 +1,4 @@
-module.exports=(product,knex,jwt)=>{
+module.exports=(product,knex,jwt,secret_key)=>{
     product.get("/",(req,res)=>{
         knex
         .select("*")
