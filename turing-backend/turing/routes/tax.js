@@ -1,4 +1,4 @@
-module.exports=(tax,knew,jwt)=>{
+module.exports=(tax,knew,jwt,secret_key)=>{
     tax.get("/",(req,res)=>{
         knew('tax').select("*").then((data)=>{res.send(data)}).catch((err)=>{res.send(err)})
     })
