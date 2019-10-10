@@ -1,5 +1,5 @@
 
-module.exports=(customer,knex,jwt)=>{
+module.exports=(customer,knex,jwt,secret_key)=>{
     customer.post('/',(req,res)=>{
         let body=req.body;
        knex('customer')
@@ -29,7 +29,7 @@ module.exports=(customer,knex,jwt)=>{
                         data=(JSON.stringify(data))
                         data=JSON.parse(data)
                         let id=data[0]['customer_id'].toString();
-                        let token=jwt.sign({"customer_id":id},'kapil')
+                        let token=jwt.sign({"customer_id":id},secret_key)
                         res.cookie(token)
                         res.send("log in successful")
                     }
@@ -45,7 +45,7 @@ module.exports=(customer,knex,jwt)=>{
     customer.put('/',(req,res)=>{
         let token=req.headers.cookie.split(' ')
         token=token[token.length-1].slice(0,-10)
-        token=jwt.verify(token,'kapil')
+        token=jwt.verify(token,secret_key)
         knex('customer')
         .where('customer_id',token.customer_id)
         .update(
@@ -68,7 +68,7 @@ module.exports=(customer,knex,jwt)=>{
     customer.get("/",(req,res)=>{
         let token=req.headers.cookie.split(' ')
         token=token[token.length-1].slice(0,-10)
-        token=jwt.verify(token,'kapil')
+        token=jwt.verify(token,secret_key)
         knex
         .select('*')
         .from('customer')
@@ -84,7 +84,7 @@ module.exports=(customer,knex,jwt)=>{
     customer.put("/address",(req,res)=>{
         let token=req.headers.cookie.split(' ')
         token=token[token.length-1].slice(0,-10)
-        token=jwt.verify(token,'kapil')
+        token=jwt.verify(token,secret_key)
         knex('customer')
         .where('customer.customer_id',token.customer_id)
         .update({
