@@ -1,4 +1,4 @@
-module.exports=(shoppingcart,knex,jwt)=>{
+module.exports=(shoppingcart,knex,jwt,secret_key)=>{
     knex.schema.hasTable('save_cart').then((exists)=>{
         if (!exists) {
           return knex.schema.createTable('save_cart', function(t) {
@@ -14,7 +14,7 @@ module.exports=(shoppingcart,knex,jwt)=>{
       
     shoppingcart.post('/add',(req,res)=>{
         let token=req.headers.cookie.slice(0,-10);
-        let customer_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let customer_id=parseInt(jwt.verify(token,secret_key).customer_id)
         let product_id=parseInt(req.body.product_id) 
         let attributes=req.body.attributes;
         knex.select('product_id','item_id','cart_id','quantity').from('shopping_cart').where({'cart_id':customer_id,'product_id':product_id,'attributes':attributes})
@@ -41,7 +41,7 @@ module.exports=(shoppingcart,knex,jwt)=>{
     })
     shoppingcart.get("/",(req,res)=>{
         let token=req.headers.cookie.slice(0,-10);
-        let customer_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let customer_id=parseInt(jwt.verify(token,secret_key).customer_id)
         knex('product').select('product.product_id','name','image','price','item_id','quantity')
         .join('shopping_cart','product.product_id','shopping_cart.product_id')
         .where({'shopping_cart.cart_id':customer_id,"buy_now":1})
@@ -53,7 +53,7 @@ module.exports=(shoppingcart,knex,jwt)=>{
     })
     shoppingcart.put("/update",(req,res)=>{
         let token=req.headers.cookie.slice(0,-10)
-        let cart_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let cart_id=parseInt(jwt.verify(token,secret_key).customer_id)
         let quantity=parseInt(req.body.quantity)
         let item_id=parseInt(req.body.item_id)
         knex('shopping_cart').where({'product_id':item_id,'cart_id':cart_id}).update({'quantity':quantity})
@@ -62,7 +62,7 @@ module.exports=(shoppingcart,knex,jwt)=>{
     })
     shoppingcart.get("/totalAmount",(req,res)=>{
         let token=req.headers.cookie.slice(0,-10)
-        let cart_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let cart_id=parseInt(jwt.verify(token,secret_key).customer_id)
         knex('product').select('product.product_id','price','quantity')
         .join('shopping_cart','product.product_id','shopping_cart.product_id')
         .where('shopping_cart.cart_id',cart_id)
@@ -74,14 +74,14 @@ module.exports=(shoppingcart,knex,jwt)=>{
     })
     shoppingcart.delete("/empty",(req,res)=>{
         let token=req.headers.cookie.slice(0,-10)
-        let cart_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let cart_id=parseInt(jwt.verify(token,secret_key).customer_id)
         knex('shopping_cart').where('cart_id',cart_id).del('*')
         .then(()=>{res.send("all item deleted")})
         .catch((err)=>{res.send(err)})
     }) 
     shoppingcart.delete("/removeproduct",(req,res)=>{
         let token=req.headers.cookie.slice(0,-10)
-        let cart_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let cart_id=parseInt(jwt.verify(token,secret_key).customer_id)
         let item_id_id=parseInt(req.body.item_id)
         knex("shopping_cart").where({'shopping_cart.cart_id':cart_id,'item_id':item_id}).del('*')
         .then(()=>{console.log("yes") 
@@ -91,7 +91,7 @@ module.exports=(shoppingcart,knex,jwt)=>{
 
     shoppingcart.get("/saveforletter",(req,res)=>{
         let token=req.headers.cookie.slice(0,-10)
-        let cart_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let cart_id=parseInt(jwt.verify(token,secret_key).customer_id)
         let product_id=parseInt(req.body.product_id)
         let item_id=parseInt(req.body.item_id)
         knex('shopping_cart').select('*').where({'cart_id':cart_id,'item_id':item_id})
@@ -109,7 +109,7 @@ module.exports=(shoppingcart,knex,jwt)=>{
 
     shoppingcart.get('/movetocart',(req,res)=>{
         let token=req.headers.cookie.slice(0,-10)
-        let cart_id=parseInt(jwt.verify(token,"kapil").customer_id)
+        let cart_id=parseInt(jwt.verify(token,secret_key).customer_id)
         let product_id=parseInt(req.body.product_id)
         let item_id=parseInt(req.body.item_id)
         knex('save_cart').select("*").where({'cart_id':cart_id,'item_id':item_id})
