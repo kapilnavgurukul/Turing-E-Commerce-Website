@@ -1,4 +1,4 @@
-module.exports=(shipping,knex,jwt)=>{
+module.exports=(shipping,knex,jwt,secret_key)=>{
     shipping.get('/regions',(req,res)=>{
         knex('shipping_region').select('*')
         .then((data)=>{res.send(data)})
