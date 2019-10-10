@@ -1,4 +1,4 @@
-module.exports=(attributes,knex)=>{
+module.exports=(attributes,knex,secret_key)=>{
     attributes.get("/",(req,res)=>{
         knex
         .select("*")
@@ -43,7 +43,6 @@ module.exports=(attributes,knex)=>{
         .join('attribute',"attribute.attribute_id","attribute_value.attribute_id")
         .where('product_id',req.params.p_id)
         .then((data)=>{
-            console.log("kkkkaplu")
             res.send(data)
         }).catch((err)=>{
             res.send(err)
