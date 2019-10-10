@@ -1,4 +1,4 @@
-module.exports=(category,knex)=>{
+module.exports=(category,knex,secret_key)=>{
     category.get("/",(req,res)=>{
         knex()
         .select("*")
