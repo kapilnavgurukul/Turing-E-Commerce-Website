@@ -1,7 +1,7 @@
-module.exports=(orders,knex,jwt)=>{
+module.exports=(orders,knex,jwt,secret_key)=>{
     orders.post("/",(req,res)=>{
         let cart_id=req.headers.cookie.slice(0,-10);
-        cart_id=jwt.verify(cart_id,"kapil").customer_id
+        cart_id=jwt.verify(cart_id,secret_key).customer_id
         let ship_id=parseInt(req.body.shipping_id)
         let tax_id=parseInt(req.body.tax_id)
         let date =new Date
