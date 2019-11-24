@@ -27,7 +27,12 @@ module.exports=(orders,knex,jwt,secret_key)=>{
                     let tax=(tax_percentage*total_amount)/100
                     total_amount+=tax
                     knex('orders')
-                    .insert({'total_amount':total_amount,'created_on':date,'shipping_id':ship_id,'tax_id':tax_id,'status':1,'customer_id':cart_id})
+                    .insert({
+                        'total_amount':total_amount,
+                        'created_on':date,
+                        'shipping_id':ship_id,
+                        'tax_id':tax_id,'status':1,
+                        'customer_id':cart_id})
                     .then(()=>{
                         knex('shopping_cart')
                         .update({'buy_now':0})
