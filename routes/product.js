@@ -93,14 +93,27 @@ module.exports=(product,knex,jwt,secret_key)=>{
         let product_id=parseInt(req.body.product_id)
         let token=req.headers.cookie.slice(0,-10)
         let customer_id=jwt.verify(token,'kapil').customer_id
-        knex('review').select('*').where({"customer_id":customer_id,'product_id':product_id})
+        knex('review')
+        .select('*')
+        .where({"customer_id":customer_id,'product_id':product_id})
         .then((data)=>{
             if ((data.length)==0){
-                knex('review').insert({"created_on":new Date,'rating':rating,'review':review,'product_id':product_id,'customer_id':customer_id})
+                knex('review')
+                .insert({
+                    "created_on":new Date,
+                    'rating':rating,
+                    'review':review,
+                    'product_id':product_id,
+                    'customer_id':customer_id
+                })
                 .then(()=>{res.send("review inserted")})
                 .catch((err)=>{res.send(err)})
             }else{
-                knex('review').update({'review':review,'rating':rating}).where({"customer_id":customer_id,'product_id':product_id})
+                knex('review')
+                .update({
+                    'review':review,'rating':rating
+                    })
+                .where({"customer_id":customer_id,'product_id':product_id})
                 .then(()=>{res.send("review apdated")})
                 .catch((err)=>{res.send(err)})
             }
@@ -108,7 +121,8 @@ module.exports=(product,knex,jwt,secret_key)=>{
     })
     
     product.get('/:product_id/reviews',(req,res)=>{
-        knex("review").select('product_id','rating','review','created_on','name')
+        knex("review")
+        .select('product_id','rating','review','created_on','name')
         .join('customer','customer.customer_id','review.customer_id')
         .then((data)=>{res.send(data)})
         .catch((err)=>{res.send(err)})
