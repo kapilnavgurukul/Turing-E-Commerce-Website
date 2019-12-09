@@ -19,7 +19,7 @@ const knex=require("knex")({
     }
 })
 
-require('./routes/create_table')
+require('./routes/create_table')(knex)
 
 app.use('/department',department=express.Router())
 require('./routes/department')(department,knex,secret_key)
